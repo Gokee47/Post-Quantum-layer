@@ -1,5 +1,11 @@
 import requests
 import oqs
+import requests
+
+msg = "Patient Heartbeat: 72 BPM"
+res = requests.post("http://127.0.0.1:5000/send_data", json={"data": msg})
+print(res.json())
+
 
 ALGO = "Kyber512"
 

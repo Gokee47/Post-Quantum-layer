@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Quantum-Resistant IoT Server</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="bg-dark text-light">
+
+  <div class="container py-5">
+    <div class="text-center mb-4">
+      <h1 class="fw-bold text-gradient">Quantum-Resistant IoT Server</h1>
+      <p class="lead">🚀 Welcome to <strong>Digital Dawn Security</strong><br>
+      Post-Quantum Layer for IoT Data Protection</p>
+    </div>
+
+    <!-- Status Card -->
+    <div class="card shadow-lg text-center p-4 card-dark">
+
+      <h3 class="mb-3">🔐 Secure Layer</h3>
+      <p><span id="quantum-layer" class="badge badge-gradient">Loading...</span></p>
+
+      <h3 class="mb-3">🖥️ Server Status</h3>
+      <p><span id="server-status" class="badge badge-gradient">Checking...</span></p>
+
+      <p class="mt-2 text-muted" id="status-timestamp">Status polled at --</p>
+      <p class="text-info fw-bold" id="status-log">System idle...</p>
+
+      <button class="btn btn-lg btn-outline-light mt-3" onclick="checkStatus()">🔄 Status</button>
+    </div>
+  </div>
+
+  <script>
+    async function checkStatus() {
+      try {
+        const res = await fetch("/status");
+        if (!res.ok) throw new Error("Server returned an error");
+
+        const data = await res.json();
+
+        // Update badges
+        document.getElementById("quantum-layer").innerText = data.quantum_layer;
+        document.getElementById("server-status").innerText = data.status;
+
+        document.getElementById("quantum-layer").className = "badge-gradient";
+        document.getElementById("server-status").className = "badge-gradient";
+
+        // Update timestamp
+        const now = new Date().toLocaleTimeString();
+        document.getElementById("status-timestamp").innerText = `Status polled at ${now}`;
+
+        // Show diagnostic message
+        document.getElementById("status-log").innerText =
+          `🧠 Diagnostic: Quantum layer verified, server operational at ${now}`;
+      } catch (err) {
+        document.getElementById("server-status").innerText = "Error fetching status";
+        document.getElementById("server-status").className = "badge bg-danger";
+        document.getElementById("status-log").innerText = "❌ Diagnostic: Server unreachable";
+      }
+    }
+
+    // Auto-refresh status on page load
+    window.onload = checkStatus;
+  </script>
+</body>
+</html>
